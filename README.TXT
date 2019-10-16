@@ -4,12 +4,14 @@ yes ,jemeter is wonderful , but it difficute to use and it make by java waste to
 GOEASYPRESS while help you to resolve the problem.
 first,it easy to use. in shell execute GOEASYPRESS ,it will be run. enter -help , it will show you the param. 
 
--m=post  method post/get
--c=10    Concurrent 并发数
--d=10    duration   持续时间 秒
--u=http://localhost:8000/
--head_file=C:/Users/Administrator/Desktop/head          设置header值：文件内容使用‘K=V’形式
--post_form_file=C:/Users/Administrator/Desktop/head     post_form：文件内容使用‘K=V’形式
+-m=POST //method:POST/GET
+-c=10 //Concurrent:并发数
+-d=10 //duration:持续时间（秒）
+-u=http://localhost:8000/ //请求路径,建议加双引号-u=\"www.baidu.com\"。
+-head_file=C:/Users/Administrator/Desktop/head.txt //设置http请求header值：文件内容使用‘K=V’形式
+-post_form_file=C:/Users/Administrator/Desktop/post_form.txt //设置请求参数，提供两种方式：K=V键值对形式；JSON形式；
+-print_body=true //是否显示返回数据
+-is_send_once=true //是否只发一次数据
 -help
 
 thie is a simple run example:
