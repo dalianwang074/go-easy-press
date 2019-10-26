@@ -24,14 +24,10 @@ import (
 -print_body=true   是否显示返回数据
 -is_send_once=true   是否只发一次数据
 
-两种实现方式：
-加锁：数据绝对没有并发问题，代码实现简单清晰。
-管道：实现繁琐，会有少量并发问题
-本项目中采用加锁实现
 */
 
 //压测结果
-type press_result struct {
+type PressResult struct {
 	total_time  float64
 	total_num   int
 	success_num int
@@ -63,42 +59,45 @@ func main() {
 		return
 	}
 
-	var pressResult *press_result = &press_result{total_num: 0, fail_num: 0}
-
 	fmt.Println(requestParams.url)
 	wg.Add(requestParams.concurrent)
 
+	pressResultChan := make(chan PressResult, 1024)
+
 	for i := 0; i < requestParams.concurrent; i++ {
-		go httpRequestLock(requestParams.url, pressResult, requestParams.duration, requestParams.method, requestParams.hf_value)
+		go httpRequestLock(pressResultChan)
 	}
 
-	var num int64 = 0
-	for num < requestParams.duration {
-		time.Sleep(time.Duration(1000) * time.Millisecond)
-		go printResult(pressResult, requestParams.concurrent)
-		num++
+	pressResultValue := &PressResult{}
+	go closeChen(pressResultChan)
+
+	for pressResult := range pressResultChan {
+		pressResultValue.total_time += pressResult.total_time
+		pressResultValue.total_num += pressResult.total_num
+		pressResultValue.success_num += pressResult.success_num
+		pressResultValue.fail_num += pressResult.fail_num
+		if pressResultValue.total_num%100 == 0 {
+			printResult(pressResultValue, requestParams.concurrent)
+		}
 	}
 
-	wg.Wait()
-	printResult(pressResult, requestParams.concurrent)
+	printResult(pressResultValue, requestParams.concurrent)
 }
-
-var lock sync.Mutex
 
 /**
 发送http请求方法。For循环发送
 */
-func httpRequestLock(requestPath string, pressResult *press_result, durationTime int64, method string, hf_value string) {
+func httpRequestLock(pressResultChan chan PressResult) {
 
 	enterTime := time.Now().UnixNano() / 1e6
 	endTime := time.Now().UnixNano() / 1e6
 
-	for (endTime - enterTime) < (durationTime * 1000) {
+	for (endTime - enterTime) < (requestParams.duration * 1000) {
 
 		startTime := time.Now().UnixNano() / 1e6
 
 		var resp *http.Response
-		resp = requestGP(requestPath, method)
+		resp = requestGP(requestParams.url, requestParams.method)
 
 		endTime = time.Now().UnixNano() / 1e6
 		responseTime := endTime - startTime
@@ -113,7 +112,8 @@ func httpRequestLock(requestPath string, pressResult *press_result, durationTime
 			fmt.Println(string(body))
 		}
 
-		lock.Lock()
+		var pressResult PressResult = PressResult{total_num: 0, fail_num: 0}
+
 		if statusCode == 200 {
 			pressResult.success_num++
 		} else {
@@ -121,13 +121,13 @@ func httpRequestLock(requestPath string, pressResult *press_result, durationTime
 		}
 		pressResult.total_time += float64(responseTime)
 		pressResult.total_num++
-		lock.Unlock()
+
+		pressResultChan <- pressResult
 
 		//只发一次请求
 		if requestParams.is_send_once == "true" {
 			break
 		}
-
 	}
 	wg.Done()
 }

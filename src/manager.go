@@ -6,10 +6,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //打印压测结果方法
-func printResult(pressResult *press_result, concurrent int) {
+func printResult(pressResult *PressResult, concurrent int) {
 	aveTimeFloat := pressResult.total_time / float64(pressResult.total_num)
 	var aveTimeStr string = fmt.Sprintf("%.2f", aveTimeFloat, 64)
 	qps := (1000 / aveTimeFloat) * float64(concurrent)
@@ -63,6 +64,19 @@ func readHeadFile(filePath string, fileType string) (value string) {
 	}
 }
 
+func printResultSchedule(pressResult *PressResult, concurrent int) {
+	for {
+		time.Sleep(time.Duration(1000) * time.Millisecond)
+		printResult(pressResult, concurrent)
+	}
+}
+
+func closeChen(pressResultChan chan PressResult) {
+	wg.Wait()
+	close(pressResultChan)
+}
+
+//处理参数方法
 func checkParams(requestParams *RequestParams) string {
 	for _, param := range os.Args {
 		if strings.Contains(param, "-m") {
