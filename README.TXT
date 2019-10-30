@@ -4,18 +4,28 @@ yes ,jemeter is wonderful , but it difficute to use and it make by java waste to
 GOEASYPRESS while help you to resolve the problem.
 first,it easy to use. in shell execute GOEASYPRESS ,it will be run. enter -help , it will show you the param. 
 
--m=POST //method:POST/GET
--c=10 //Concurrent:并发数
--d=10 //duration:持续时间（秒）
--u=http://localhost:8000/ //请求路径,建议加双引号-u=\"www.baidu.com\"。
--head_file=C:/Users/Administrator/Desktop/head.txt //设置http请求header值：文件内容使用‘K=V’形式
--post_form_file=C:/Users/Administrator/Desktop/post_form.txt //设置请求参数，提供两种方式：K=V键值对形式；JSON形式；
--print_body=true //是否显示返回数据
--is_send_once=true //是否只发一次数据
--help
+GoEasyPress is a tool for http/https press.
+
+Usage:
+	gep.exe <command>=[arguments]       //windows
+	gep <command>=[arguments]           //linux/mac
+	gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10
+
+The command are:
+	-m		        method,POST/GET
+	-c		        concurrent，并发数
+	-d		        duration，持续时间（秒）
+	-u		        url，请求路径,建议加双引号.-u="www.baidu.com"
+	-head_file	    设置http请求header值：文件内容使用‘K=V’形式
+			        -head_file=C:/Users/Desktop/head.txt
+	-post_form_file	设置请求参数，提供两种方式：K=V键值对形式；JSON形式
+			        -post_form_file=C:/Users/Desktop/post_form.txt
+	-print_body	    是否显示返回数据，默认false.-print_body=true
+	-is_send_once	是否只发一次数据，默认false.-is_send_once=true
 
 thie is a simple run example:
-press_test_client.exe -m=post -c=10 -d=10 -u=http://localhost:8000/
+gep.exe -m=post -c=10 -d=10 -u=http://localhost:8000/       //windows
+gep -m=post -c=10 -d=10 -u=http://localhost:8000/           //linux/mac
 and the result is ：
 the avetime time is %!d(float64=26.908333333333335) ,total num is 120, success num is 120, fail num is 0 
 
