@@ -1,17 +1,37 @@
-# KubeOperator - 从这里开启您的 Kubernetes 之旅
+# GO_EASY_PRESS 够易压
 
-[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/KubeOperatpr/KubeOperatpr/blob/master/LICENSE)
-[![Python3](https://img.shields.io/badge/python-3.6-green.svg?style=plastic)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/django-2.1-brightgreen.svg?style=plastic)](https://www.djangoproject.com/)
-[![Ansible](https://img.shields.io/badge/ansible-2.6.5-blue.svg?style=plastic)](https://www.ansible.com/)
-[![Angular](https://img.shields.io/badge/angular-7.0.4-red.svg?style=plastic)](https://www.angular.cn/)
+[![go](https://img.shields.io/badge/python-3.6-green.svg?style=plastic)](https://golang.google.cn/)
+[![release](https://img.shields.io/badge/django-2.1-brightgreen.svg?style=plastic)](https://www.djangoproject.com/)
 
-KubeOperator 是一个开源项目，在离线网络环境下，通过可视化 Web UI 在 VMware、Openstack 或者物理机上规划、部署和管理生产级别的 Kubernetes 集群。KubeOperator 是 [Jumpserver](https://github.com/jumpserver/jumpserver) 明星开源团队在 Kubernetes 领域的的又一全新力作。
+when you would be a http press test, what you like to use? jmeter ?
+yes ,jemeter is wonderful , but it difficute to use and it make by java waste too much memory.
 
-![overview](https://github.com/KubeOperator/docs/blob/master/website/static/img/overview.png?raw=true)
+GOEASYPRESS while help you to resolve the problem.
+first,it easy to use. in shell execute GOEASYPRESS ,it will be run. enter -help , it will show you the param. 
 
-## Web UI 展示
+GoEasyPress is a tool for http/https press.
 
-![overview](https://raw.githubusercontent.com/KubeOperator/website/master/images/kubeoperator-ui.jpg)
+## Running GOEASYPRESS
 
->更多功能截屏请查看：https://docs.kubeoperator.io/kubeoperator-v2.1/screenshot
+./gep -m=POST -u="https://www.baidu.com" -c=2 -d=10
+gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10
+
+## -help
+Usage:
+	gep.exe <command>=[arguments]       //windows
+	gep <command>=[arguments]           //linux/mac
+	gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10
+
+The command are:
+	-m		        method,POST/GET
+	-c		        concurrent，并发数
+	-d		        duration，持续时间（秒）
+	-u		        url，请求路径,建议加双引号.-u="www.baidu.com"
+	-head_file	    设置http请求header值：文件内容使用‘K=V’形式
+			        -head_file=C:/Users/Desktop/head.txt
+	-post_form_file	设置请求参数，提供两种方式：K=V键值对形式；JSON形式
+			        -post_form_file=C:/Users/Desktop/post_form.txt
+	-print_body	    是否显示返回数据，默认false.-print_body=true
+	-is_send_once	是否只发一次数据，默认false.-is_send_once=true
+  
+  
