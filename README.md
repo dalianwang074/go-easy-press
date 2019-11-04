@@ -1,7 +1,8 @@
 # GO_EASY_PRESS 够易压
 
-[![go](https://img.shields.io/badge/python-3.6-green.svg?style=plastic)](https://golang.google.cn/)
-[![release](https://img.shields.io/badge/django-2.1-brightgreen.svg?style=plastic)](https://www.djangoproject.com/)
+[![go](https://camo.githubusercontent.com/a6e1294d35e4a5bf8f9af4b16b1db2f2444f0549/68747470733a2f2f676f7265706f7274636172642e636f6d2f62616467652f6769746875622e636f6d2f646576656c6f7065722d6c6561726e696e672f6c6561726e696e672d676f6c616e67)](https://golang.google.cn/)
+
+
 
 - when you would be a http press test, what you like to use? jmeter ?
 yes ,jemeter is wonderful , but it difficute to use and it make by java waste too much memory.
@@ -13,8 +14,8 @@ yes ,jemeter is wonderful , but it difficute to use and it make by java waste to
 GO_EASY_PRESS is a tool for http/https press.
 
 ## Running go_easy_press
-
-- ./gep -m=POST -u="https://www.baidu.com" -c=2 -d=10
-- gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10
-
 - ./gep -help
+- ./gep -m=POST -u="https://www.baidu.com" -c=2 -d=10     //linux/mac
+- gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10   //windows
+
+
