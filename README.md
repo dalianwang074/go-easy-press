@@ -3,20 +3,20 @@
 [![go](https://img.shields.io/badge/python-3.6-green.svg?style=plastic)](https://golang.google.cn/)
 [![release](https://img.shields.io/badge/django-2.1-brightgreen.svg?style=plastic)](https://www.djangoproject.com/)
 
-when you would be a http press test, what you like to use? jmeter ?
+- when you would be a http press test, what you like to use? jmeter ?
 yes ,jemeter is wonderful , but it difficute to use and it make by java waste too much memory.
 
-GOEASYPRESS while help you to resolve the problem.
+- go_easy_press while help you to resolve the problem.
 first,it easy to use. in shell execute GOEASYPRESS ,it will be run. enter -help , it will show you the param. 
 
-GoEasyPress is a tool for http/https press.
+- GoEasyPress is a tool for http/https press.
 
-## Running GOEASYPRESS
+## Running go_easy_press
 
-./gep -m=POST -u="https://www.baidu.com" -c=2 -d=10
-gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10
+- ./gep -m=POST -u="https://www.baidu.com" -c=2 -d=10
+- gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10
 
-## -help
+## Use -help
 Usage:
 	gep.exe <command>=[arguments]       //windows
 	gep <command>=[arguments]           //linux/mac
