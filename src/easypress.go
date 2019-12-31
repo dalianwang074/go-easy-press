@@ -37,7 +37,7 @@ type PressResult struct {
 //请求参数
 type RequestParams struct {
 	print_body   string //是否打印body
-	is_send_once string //是否只发送一次
+	send_once string //是否只发送一次
 	json_param   []byte //json参数
 	method       string
 	url          string
@@ -53,7 +53,7 @@ var requestParams *RequestParams  //用来存放请求参数
 
 func main() {
 
-	requestParams = &RequestParams{print_body: "fable", is_send_once: "fable", duration: 1}
+	requestParams = &RequestParams{print_body: "false", send_once: "false", duration: 1,concurrent:1}
 	paramResult := checkParams(requestParams)
 	if len(paramResult) > 0 {
 		return
@@ -94,6 +94,7 @@ func httpRequestLock(pressResultChan chan PressResult) {
 
 	for (endTime - enterTime) < (requestParams.duration * 1000) {
 
+		fmt.Println("go here2")
 		startTime := time.Now().UnixNano() / 1e6
 
 		var resp *http.Response
@@ -125,7 +126,7 @@ func httpRequestLock(pressResultChan chan PressResult) {
 		pressResultChan <- pressResult
 
 		//只发一次请求
-		if requestParams.is_send_once == "true" {
+		if requestParams.send_once == "true" {
 			break
 		}
 	}

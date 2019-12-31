@@ -130,7 +130,7 @@ func checkParams(requestParams *RequestParams) string {
 		} else if strings.Contains(param, "-print_body") {
 			requestParams.print_body = strings.Replace(param, "-print_body=", "", 1)
 		} else if strings.Contains(param, "-is_send_once") {
-			requestParams.is_send_once = strings.Replace(param, "-is_send_once=", "", 1)
+			requestParams.send_once = strings.Replace(param, "-send_once=", "", 1)
 		}
 
 	}
