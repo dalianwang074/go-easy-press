@@ -99,17 +99,18 @@ func checkParams(requestParams *RequestParams) string {
 			fmt.Println("\tgep <command>=[arguments]\t //linux/mac")
 			fmt.Println("\tgep.exe -m=POST -u=\"https://www.baidu.com\" -c=2 -d=10")
 			fmt.Println()
-			fmt.Println("The command are:")
-			fmt.Println("\t-m\t\tmethod,POST/GET")
-			fmt.Println("\t-c\t\tconcurrent，并发数")
-			fmt.Println("\t-d\t\tduration，持续时间（秒）")
-			fmt.Println("\t-u\t\turl，请求路径,建议加双引号.-u=\"www.baidu.com\"")
-			fmt.Println("\t-head_file\t设置http请求header值：文件内容使用‘K=V’形式")
-			fmt.Println("\t\t\t-head_file=C:/Users/Desktop/head.txt")
-			fmt.Println("\t-post_form_file\t设置请求参数，提供两种方式：K=V键值对形式；JSON形式")
-			fmt.Println("\t\t\t-post_form_file=C:/Users/Desktop/post_form.txt")
+			fmt.Println("The Command :")
+			fmt.Println("\t-m\tmethod,POST/GET")
+			fmt.Println("\t-c\tconcurrent，并发数")
+			fmt.Println("\t-d\tduration，持续时间（秒）")
+			fmt.Println("\t-u\turl，请求路径,建议加双引号.-u=\"www.baidu.com\"")
+			fmt.Println("\t-head_file\t设置请求header.-head_file=C:/Users/head.txt")
+			fmt.Println("\t-form_file\t设置表单参数，文本提供两种方式：K=V键值对形式；JSON形式")
 			fmt.Println("\t-print_body\t是否显示返回数据，默认false.-print_body=true")
-			fmt.Println("\t-is_send_once\t是否只发一次数据，默认false.-is_send_once=true")
+			fmt.Println("\t-send_once\t是否只发一次数据，默认false.-send_once=true")
+			fmt.Println()
+			fmt.Println("The Explain :")
+			fmt.Println("\t请求读取文本内容默认使用‘K=V’形式存储")
 			return "help"
 		} else if strings.Contains(param, "-head_file") {
 			hf_path := strings.Replace(param, "-head_file=", "", 1)
@@ -119,17 +120,17 @@ func checkParams(requestParams *RequestParams) string {
 				fmt.Println(requestParams.hf_value)
 				return "read_error"
 			}
-		} else if strings.Contains(param, "-post_form_file") {
-			hf_path := strings.Replace(param, "-post_form_file=", "", 1)
+		} else if strings.Contains(param, "-form_file") {
+			hf_path := strings.Replace(param, "-form_file=", "", 1)
 			postFormMap = make(map[string]string)
-			requestParams.hf_value = readHeadFile(hf_path, "post_form_file")
+			requestParams.hf_value = readHeadFile(hf_path, "form_file")
 			if strings.Contains(requestParams.hf_value, "read_error") {
 				fmt.Println(requestParams.hf_value)
 				return "read_error"
 			}
 		} else if strings.Contains(param, "-print_body") {
 			requestParams.print_body = strings.Replace(param, "-print_body=", "", 1)
-		} else if strings.Contains(param, "-is_send_once") {
+		} else if strings.Contains(param, "-send_once") {
 			requestParams.send_once = strings.Replace(param, "-send_once=", "", 1)
 		}
 

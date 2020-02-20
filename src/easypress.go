@@ -20,9 +20,9 @@ import (
 -u=http://localhost:8000/    url
 -help
 -head_file=C:/Users/Administrator/Desktop/head   设置header值：文件内容使用‘K=V’形式
--post_form_file=C:/Users/Administrator/Desktop/head   设置请求参数，提供两种方式：K=V键值对形式；JSON形式；
+-form_file=C:/Users/Administrator/Desktop/head   设置请求参数，提供两种方式：K=V键值对形式；JSON形式；
 -print_body=true   是否显示返回数据
--is_send_once=true   是否只发一次数据
+-send_once=true   是否只发一次数据
 
 */
 
@@ -94,7 +94,6 @@ func httpRequestLock(pressResultChan chan PressResult) {
 
 	for (endTime - enterTime) < (requestParams.duration * 1000) {
 
-		fmt.Println("go here2")
 		startTime := time.Now().UnixNano() / 1e6
 
 		var resp *http.Response
