@@ -102,6 +102,16 @@ func httpRequestLock(pressResultChan chan PressResult) {
 		endTime = time.Now().UnixNano() / 1e6
 		responseTime := endTime - startTime
 
+		var pressResult PressResult = PressResult{total_num: 0, fail_num: 0}
+
+		if resp == nil {
+			pressResult.fail_num++
+			pressResult.total_time += float64(responseTime)
+			pressResult.total_num++
+			pressResultChan <- pressResult
+			break
+		}
+
 		statusCode := resp.StatusCode
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
@@ -112,7 +122,7 @@ func httpRequestLock(pressResultChan chan PressResult) {
 			fmt.Println(string(body))
 		}
 
-		var pressResult PressResult = PressResult{total_num: 0, fail_num: 0}
+
 
 		if statusCode == 200 {
 			pressResult.success_num++
