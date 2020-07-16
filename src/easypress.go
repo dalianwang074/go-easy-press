@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"net"
 )
 
 /**
@@ -65,7 +66,7 @@ func main() {
 	pressResultChan := make(chan PressResult, 1024)
 
 	for i := 0; i < requestParams.concurrent; i++ {
-		go httpRequestLock(pressResultChan)
+		go httpRequest(pressResultChan)
 	}
 
 	pressResultValue := &PressResult{}
@@ -87,7 +88,7 @@ func main() {
 /**
 发送http请求方法。For循环发送
 */
-func httpRequestLock(pressResultChan chan PressResult) {
+func httpRequest(pressResultChan chan PressResult) {
 
 	enterTime := time.Now().UnixNano() / 1e6
 	endTime := time.Now().UnixNano() / 1e6
@@ -172,6 +173,10 @@ func requestGP(requestPath string, method string) *http.Response {
 	//跳过证书认证
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		DialContext:(&net.Dialer{
+			Timeout:60 * time.Second,
+			KeepAlive:60 * time.Second,
+		}).DialContext,
 	}
 	client := &http.Client{Transport: tr}
 	resp, err := client.Do(req)

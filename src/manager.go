@@ -21,8 +21,8 @@ func printResult(pressResult *PressResult, concurrent int) {
 		failPercent = float64(pressResult.fail_num) / float64(pressResult.total_num) * 100
 		failPercentStr = fmt.Sprintf("%.2f", failPercent, 64)
 	}
-	fmt.Printf("avetime time is %s ,the qps is %s ,total num is %d, success num is %d, fail num is %d, fail percent is %s \n",
-		aveTimeStr, qpsStr, pressResult.total_num, pressResult.success_num, pressResult.fail_num, failPercentStr)
+	fmt.Printf("avetime time is %s ,the qps is %s ,total num is %d, fail num is %d, fail percent is %s \n",
+		aveTimeStr, qpsStr, pressResult.total_num, pressResult.fail_num, failPercentStr)
 }
 
 //读本地文件，主要是header和params文件
