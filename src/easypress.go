@@ -66,7 +66,7 @@ func main() {
 	pressResultChan := make(chan PressResult, 1024)
 
 	for i := 0; i < requestParams.concurrent; i++ {
-		go httpRequest(pressResultChan)
+		go httpRequest(pressResultChan,i)
 	}
 
 	pressResultValue := &PressResult{}
@@ -88,17 +88,54 @@ func main() {
 /**
 发送http请求方法。For循环发送
 */
-func httpRequest(pressResultChan chan PressResult) {
+func httpRequest(pressResultChan chan PressResult,currentThread int) {
 
 	enterTime := time.Now().UnixNano() / 1e6
 	endTime := time.Now().UnixNano() / 1e6
+
+	//跳过证书认证
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		DialContext:(&net.Dialer{
+			Timeout:60 * time.Second,
+			KeepAlive:60 * time.Second,
+		}).DialContext,
+	}
+	client := &http.Client{Transport: tr}
 
 	for (endTime - enterTime) < (requestParams.duration * 1000) {
 
 		startTime := time.Now().UnixNano() / 1e6
 
 		var resp *http.Response
-		resp = requestGP(requestParams.url, requestParams.method)
+		var bodystr string
+		var bodyReader io.Reader
+
+		//将参数文件内容设置到请求头中
+		if len(postFormMap) > 0 {
+			var r http.Request
+			r.ParseForm()
+			for kv := range postFormMap {
+				r.Form.Add(kv, postFormMap[kv])
+			}
+			bodystr = strings.TrimSpace(r.Form.Encode())
+			bodyReader = strings.NewReader(bodystr)
+		}
+		if len(requestParams.json_param) > 0 {
+			bodyReader = bytes.NewBuffer(requestParams.json_param)
+		}
+
+		req, _ := http.NewRequest(requestParams.method, requestParams.url, bodyReader)
+
+		//将header文件内容设置到请求头中
+		for kv := range headerMap {
+			req.Header.Set(kv, headerMap[kv])
+		}
+
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		endTime = time.Now().UnixNano() / 1e6
 		responseTime := endTime - startTime
@@ -144,7 +181,7 @@ func httpRequest(pressResultChan chan PressResult) {
 }
 
 //封装request请求
-func requestGP(requestPath string, method string) *http.Response {
+func requestGP(requestPath string, method string,currentThread int) *http.Response {
 
 	var bodystr string
 	var bodyReader io.Reader
@@ -185,3 +222,5 @@ func requestGP(requestPath string, method string) *http.Response {
 	}
 	return resp
 }
+
+
