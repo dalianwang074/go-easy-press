@@ -12,17 +12,13 @@ import (
 //打印压测结果方法
 func printResult(pressResult *PressResult, concurrent int) {
 	aveTimeFloat := pressResult.total_time / float64(pressResult.total_num)
-	var aveTimeStr string = fmt.Sprintf("%.2f", aveTimeFloat, 64)
 	qps := (1000 / aveTimeFloat) * float64(concurrent)
-	var qpsStr string = fmt.Sprintf("%.2f", qps, 64)
 	var failPercent float64 = 0
-	var failPercentStr string = "0.0"
 	if pressResult.total_num > 0 {
 		failPercent = float64(pressResult.fail_num) / float64(pressResult.total_num) * 100
-		failPercentStr = fmt.Sprintf("%.2f", failPercent, 64)
 	}
-	fmt.Printf("avetime time is %s ,the qps is %s ,total num is %d, fail num is %d, fail percent is %s \n",
-		aveTimeStr, qpsStr, pressResult.total_num, pressResult.fail_num, failPercentStr)
+	fmt.Printf("avetime time is %fs ,the qps is %d ,total num is %d, fail num is %d, fail percent is %d%% \n",
+		aveTimeFloat, int(qps), pressResult.total_num, pressResult.fail_num, int(failPercent))
 }
 
 //读本地文件，主要是header和params文件

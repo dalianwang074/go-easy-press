@@ -180,47 +180,4 @@ func httpRequest(pressResultChan chan PressResult,currentThread int) {
 	wg.Done()
 }
 
-//封装request请求
-func requestGP(requestPath string, method string,currentThread int) *http.Response {
-
-	var bodystr string
-	var bodyReader io.Reader
-
-	//将参数文件内容设置到请求头中
-	if len(postFormMap) > 0 {
-		var r http.Request
-		r.ParseForm()
-		for kv := range postFormMap {
-			r.Form.Add(kv, postFormMap[kv])
-		}
-		bodystr = strings.TrimSpace(r.Form.Encode())
-		bodyReader = strings.NewReader(bodystr)
-	}
-	if len(requestParams.json_param) > 0 {
-		bodyReader = bytes.NewBuffer(requestParams.json_param)
-	}
-
-	req, _ := http.NewRequest(method, requestPath, bodyReader)
-
-	//将header文件内容设置到请求头中
-	for kv := range headerMap {
-		req.Header.Set(kv, headerMap[kv])
-	}
-
-	//跳过证书认证
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		DialContext:(&net.Dialer{
-			Timeout:60 * time.Second,
-			KeepAlive:60 * time.Second,
-		}).DialContext,
-	}
-	client := &http.Client{Transport: tr}
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return resp
-}
-
 
