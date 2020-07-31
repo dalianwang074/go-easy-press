@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
-	"net"
 )
 
 /**
@@ -37,14 +37,14 @@ type PressResult struct {
 
 //请求参数
 type RequestParams struct {
-	print_body   string //是否打印body
-	send_once string //是否只发送一次
-	json_param   []byte //json参数
-	method       string
-	url          string
-	concurrent   int
-	duration     int64
-	hf_value     string //header文件内容
+	print_body string //是否打印body
+	send_once  string //是否只发送一次
+	json_param []byte //json参数
+	method     string
+	url        string
+	concurrent int
+	duration   int64
+	hf_value   string //header文件内容
 }
 
 var wg sync.WaitGroup
@@ -54,7 +54,7 @@ var requestParams *RequestParams  //用来存放请求参数
 
 func main() {
 
-	requestParams = &RequestParams{print_body: "false", send_once: "false", duration: 1,concurrent:1}
+	requestParams = &RequestParams{print_body: "false", send_once: "false", duration: 1, concurrent: 1}
 	paramResult := checkParams(requestParams)
 	if len(paramResult) > 0 {
 		return
@@ -66,7 +66,7 @@ func main() {
 	pressResultChan := make(chan PressResult, 1024)
 
 	for i := 0; i < requestParams.concurrent; i++ {
-		go httpRequest(pressResultChan,i)
+		go httpRequest(pressResultChan, i)
 	}
 
 	pressResultValue := &PressResult{}
@@ -88,7 +88,7 @@ func main() {
 /**
 发送http请求方法。For循环发送
 */
-func httpRequest(pressResultChan chan PressResult,currentThread int) {
+func httpRequest(pressResultChan chan PressResult, currentThread int) {
 
 	enterTime := time.Now().UnixNano() / 1e6
 	endTime := time.Now().UnixNano() / 1e6
@@ -96,9 +96,9 @@ func httpRequest(pressResultChan chan PressResult,currentThread int) {
 	//跳过证书认证
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		DialContext:(&net.Dialer{
-			Timeout:60 * time.Second,
-			KeepAlive:60 * time.Second,
+		DialContext: (&net.Dialer{
+			Timeout:   60 * time.Second,
+			KeepAlive: 60 * time.Second,
 		}).DialContext,
 	}
 	client := &http.Client{Transport: tr}
@@ -134,6 +134,7 @@ func httpRequest(pressResultChan chan PressResult,currentThread int) {
 
 		resp, err := client.Do(req)
 		if err != nil {
+			fmt.Print("send request error:")
 			fmt.Println(err)
 		}
 
@@ -155,12 +156,12 @@ func httpRequest(pressResultChan chan PressResult,currentThread int) {
 		if err != nil {
 			fmt.Println(err)
 		}
+		defer resp.Body.Close()
+
 		if requestParams.print_body == "true" {
 			fmt.Printf("responseTime is %d \n", responseTime)
 			fmt.Println(string(body))
 		}
-
-
 
 		if statusCode == 200 {
 			pressResult.success_num++
@@ -179,5 +180,3 @@ func httpRequest(pressResultChan chan PressResult,currentThread int) {
 	}
 	wg.Done()
 }
-
-
