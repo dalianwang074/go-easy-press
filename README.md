@@ -18,4 +18,7 @@ GO_EASY_PRESS is a tool for http/https press.
 - ./gep -m=POST -u="https://www.baidu.com" -c=2 -d=10     //linux/mac
 - gep.exe -m=POST -u="https://www.baidu.com" -c=2 -d=10   //windows
 
+## execute file download
+https://github.com/dalianwang074/go-easy-press-exec-file
+
 
