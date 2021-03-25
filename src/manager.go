@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 //打印压测结果方法
@@ -21,8 +20,8 @@ func printResult(pressResult *PressResult, concurrent int) {
 		int(aveTimeFloat), int(qps), pressResult.total_num, pressResult.fail_num, int(failPercent))
 }
 
-//读本地文件，主要是header和params文件
-func readHeadFile(filePath string, fileType string) (value string) {
+//读本地文件，主要是header和body文件
+func readFile(filePath string, fileType string) (value string) {
 	if fileObj, err := os.Open(filePath); err == nil {
 		defer fileObj.Close()
 		if contents, err := ioutil.ReadAll(fileObj); err == nil {
@@ -46,7 +45,7 @@ func readHeadFile(filePath string, fileType string) (value string) {
 				}
 				if fileType == "head_file" {
 					headerMap[kvs[0]] = value
-				} else if fileType == "post_form_file" {
+				} else if fileType == "body_file" {
 					postFormMap[kvs[0]] = value
 				}
 
@@ -57,13 +56,6 @@ func readHeadFile(filePath string, fileType string) (value string) {
 		}
 	} else {
 		return "read_error:找不到文件：" + filePath
-	}
-}
-
-func printResultSchedule(pressResult *PressResult, concurrent int) {
-	for {
-		time.Sleep(time.Duration(1000) * time.Millisecond)
-		printResult(pressResult, concurrent)
 	}
 }
 
@@ -100,8 +92,8 @@ func checkParams(requestParams *RequestParams) string {
 			fmt.Println("\t-c\tconcurrent，并发数")
 			fmt.Println("\t-d\tduration，持续时间（秒）")
 			fmt.Println("\t-u\turl，请求路径,建议加双引号.-u=\"www.baidu.com\"")
-			fmt.Println("\t-head_file\t设置请求header.-head_file=C:/Users/head.txt")
-			fmt.Println("\t-form_file\t设置表单参数，文本提供两种方式：K=V键值对形式；JSON形式")
+			fmt.Println("\t-head_file\t设置header参数，-head_file=C:/Users/head.txt")
+			fmt.Println("\t-body_file\t设置BODY参数，文本提供两种方式：K=V键值对形式；JSON形式")
 			fmt.Println("\t-print_body\t是否显示返回数据，默认false.-print_body=true")
 			fmt.Println("\t-send_once\t是否只发一次数据，默认false.-send_once=true")
 			fmt.Println()
@@ -111,15 +103,15 @@ func checkParams(requestParams *RequestParams) string {
 		} else if strings.Contains(param, "-head_file") {
 			hf_path := strings.Replace(param, "-head_file=", "", 1)
 			headerMap = make(map[string]string)
-			requestParams.hf_value = readHeadFile(hf_path, "head_file")
+			requestParams.hf_value = readFile(hf_path, "head_file")
 			if strings.Contains(requestParams.hf_value, "read_error") {
 				fmt.Println(requestParams.hf_value)
 				return "read_error"
 			}
-		} else if strings.Contains(param, "-form_file") {
-			hf_path := strings.Replace(param, "-form_file=", "", 1)
+		} else if strings.Contains(param, "-body_file") {
+			hf_path := strings.Replace(param, "-body_file=", "", 1)
 			postFormMap = make(map[string]string)
-			requestParams.hf_value = readHeadFile(hf_path, "form_file")
+			requestParams.hf_value = readFile(hf_path, "body_file")
 			if strings.Contains(requestParams.hf_value, "read_error") {
 				fmt.Println(requestParams.hf_value)
 				return "read_error"

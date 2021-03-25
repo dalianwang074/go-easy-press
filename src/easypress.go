@@ -21,7 +21,7 @@ import (
 -u=http://localhost:8000/    url
 -help
 -head_file=C:/Users/Administrator/Desktop/head   设置header值：文件内容使用‘K=V’形式
--form_file=C:/Users/Administrator/Desktop/head   设置请求参数，提供两种方式：K=V键值对形式；JSON形式；
+-body_file=C:/Users/Administrator/Desktop/head   设置BODY参数，提供两种方式：K=V键值对形式；JSON形式；
 -print_body=true   是否显示返回数据
 -send_once=true   是否只发一次数据
 
@@ -67,6 +67,11 @@ func main() {
 
 	for i := 0; i < requestParams.concurrent; i++ {
 		go httpRequest(pressResultChan, i)
+
+		//只发一次请求
+		if requestParams.send_once == "true" {
+			break
+		}
 	}
 
 	pressResultValue := &PressResult{}
