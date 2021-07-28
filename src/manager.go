@@ -11,13 +11,13 @@ import (
 //打印压测结果方法
 func printResult(pressResult *PressResult, concurrent int) {
 	aveTimeFloat := pressResult.total_time / float64(pressResult.total_num)
-	qps := (1000 / aveTimeFloat) * float64(concurrent)
+	tps := (1000 / aveTimeFloat) * float64(concurrent)
 	var failPercent float64 = 0
 	if pressResult.total_num > 0 {
 		failPercent = float64(pressResult.fail_num) / float64(pressResult.total_num) * 100
 	}
-	fmt.Printf("avetime time is %dms ,the qps is %d ,total num is %d, fail num is %d, fail percent is %d%% \n",
-		int(aveTimeFloat), int(qps), pressResult.total_num, pressResult.fail_num, int(failPercent))
+	fmt.Printf("avetime time is %dms ,the tps is %d ,total num is %d, fail num is %d, fail percent is %d%% \n",
+		int(aveTimeFloat), int(tps), pressResult.total_num, pressResult.fail_num, int(failPercent))
 }
 
 //读本地文件，主要是header和body文件
